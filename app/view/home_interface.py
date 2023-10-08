@@ -10,6 +10,7 @@ from ..common.icon import Icon, FluentIconBase
 from ..components.link_card import LinkCardView
 from ..components.sample_card import SampleCardView, ProfileCard
 from ..common.style_sheet import StyleSheet
+from ..common import resource
 
 
 class BannerWidget(QWidget):
@@ -35,7 +36,7 @@ class BannerWidget(QWidget):
 
         self.linkCardView.addCard(
             # ':/gallery/images/logo.png',
-            'app/resource/images/zk.png', 
+            ':/my_app/images/zk.png', 
             self.tr('密码学新技术'),
             self.tr('基于杂凑函数的新型零知识范围证明，更小的证明体积，支持任意基底，支持批处理。')
         )
@@ -122,7 +123,7 @@ class HomeInterface(ScrollArea):
         basicInputView = SampleCardView(
             self.tr("Basic input samples"), self.view)
 
-        self.profile = ProfileCard('app/resource/images/went.png', 'SWT', 'swt@buaa.edu.cn', self)
+        self.profile = ProfileCard(':/my_app/images/went.png', 'SWT', 'swt@buaa.edu.cn', self)
         basicInputView.flowLayout.addWidget(self.profile)
         basicInputView.addSampleCard(
             icon=":/gallery/images/controls/Button.png",

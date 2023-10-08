@@ -147,6 +147,11 @@
 
         <file>i18n/gallery.zh_CN.qm</file>
         <file>i18n/gallery.zh_HK.qm</file>
+    </qresource>
 
+    <qresource prefix="/my_app">
+        <file>images/went.png</file>
+        <file>images/zk.png</file>
+        <file>images/login.png</file>
     </qresource>
 </RCC>

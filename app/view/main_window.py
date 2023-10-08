@@ -26,6 +26,7 @@ from ..common.config import SUPPORT_URL, cfg
 from ..common.icon import Icon
 from ..common.signal_bus import signalBus
 from ..common import resource
+# pyrcc6 -o resource resources.qrc
 
 
 class MainWindow(FluentWindow):
@@ -84,7 +85,7 @@ class MainWindow(FluentWindow):
         # add custom widget to bottom
         self.navigationInterface.addWidget(
             routeKey='avatar',
-            widget=NavigationAvatarWidget('SWT', 'app/resource/images/went.png'),
+            widget=NavigationAvatarWidget('SWT', ':/my_app/images/went.png'),
             onClick=self.showMsgBox,
             position=NavigationItemPosition.BOTTOM
         )
@@ -146,7 +147,7 @@ class LoginMessageBox(MessageBoxBase):
         self.titleLabel = SubtitleLabel(self.tr('Exit and Re-LogIn'), self)
         self.userNameLineEdit = LineEdit(self)
         self.passwdLineEdit = LineEdit(self)
-        self.banner = QPixmap('app/resource/images/login.png')
+        self.banner = QPixmap(':/my_app/images/login.png')
 
         self.userNameLineEdit.setPlaceholderText(self.tr('User Name'))
         self.userNameLineEdit.setClearButtonEnabled(True)

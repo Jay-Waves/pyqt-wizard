@@ -70,4 +70,10 @@ python foo/my_app.py
 
 ## Contributing
 
+refresh the resource:
+```bash
+/usr/lib/qt6/rcc -g python -o resource.py resource.qrc
+```
+
+
 ## License
