@@ -64,6 +64,8 @@ pip install PyQt6-Fluent-Widgets -i https://pypi.org/simple/
 After installation, you can run the frontend application using the following command (make sure your virtual environment is activated):
 
 ```
+git clone https://github.com/luminous-whispers/foo
+
 python my_app.py
 ```
 
