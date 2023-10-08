@@ -42,11 +42,10 @@ It's a good practice to use a virtual environment for Python projects to avoid a
 cd /path/to/your/workspace
 
 # Create virtual environment
-python3 -m venv ./foo && cd foo
+python -m venv ./foo && cd foo
 
 # Activate the virtual environment
 source ./bin/activate
-
 ```
 
 ### 3\. Install PyQt6 and Fluent Theme in the Virtual Environment:
@@ -63,10 +62,10 @@ pip install PyQt6-Fluent-Widgets -i https://pypi.org/simple/
 
 After installation, you can run the frontend application using the following command (make sure your virtual environment is activated):
 
-```
+```bash
 git clone https://github.com/luminous-whispers/foo
 
-python my_app.py
+python foo/my_app.py
 ```
 
 ## Contributing
