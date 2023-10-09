@@ -1,0 +1,18 @@
+{
+    "yjw": {
+        "password": "123456",
+        "home_path": ["app","data","yjw"],
+        "avatar_path": ["app","data","yjw", "yjw.png"],
+        "property": {
+
+        }
+    },
+    "swt": {
+        "password": "123456",
+        "home_path": ["app","data","swt"],
+        "avatar_path": ["app","data","swt", "swt.png"]
+    },
+    "wzw": {
+        "password": "123456"
+    }
+}

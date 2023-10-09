@@ -1,0 +1,14 @@
+{
+    "_description": "接收到的评估结果",
+    "data":[
+        {
+            "source_user": "yjw",
+            "verified": false,
+            "state": 1,
+            "_state_list": {"1": "unverified", "2": "succeed", "3":"failed"},
+            "criteria": {
+
+            }
+        }
+    ]
+}

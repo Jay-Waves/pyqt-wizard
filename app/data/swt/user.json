@@ -1,0 +1,14 @@
+{
+    "name": "swt",
+    "email": "swt@buaa.edu.cn",
+    "password": "123456",
+    "home_path": "app/data/swt",
+    "avatar_path": "app/data/swt/swt.png",
+    "friends": [
+        "yjw",
+        "wzw"    
+    ],
+    "friends_asked": [
+        "yjw"
+    ]
+}

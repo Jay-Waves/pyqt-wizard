@@ -15,8 +15,8 @@ This repository contains the frontend application for our Cryptography Competiti
 
 ## Prerequisites
 
--   OS: Any Linux Distribution. Arch recommanded 
--   Python 3.8 or later.
+- Python 3.8 or later
+- Linux recommanded; Windows only feasible in theory
 
 ## Installation
 
@@ -36,7 +36,7 @@ sudo apt install qt6-base
 
 ### 2\. Create a Python Virtual Environment:
 
-It's a good practice to use a virtual environment for Python projects to avoid any dependency conflicts. 
+It's a good practice to use a virtual environment of Python projects to avoid any dependency conflicts. 
 
 ```bash
 cd /path/to/your/workspace
@@ -58,13 +58,17 @@ pip install pyqt6
 pip install PyQt6-Fluent-Widgets -i https://pypi.org/simple/
 ```
 
+### 4\. Clone this repository and Begin:
+
+```bash
+git clone https://github.com/luminous-whispers/foo
+```
+
 ## Usage
 
 After installation, you can run the frontend application using the following command (make sure your virtual environment is activated):
 
 ```bash
-git clone https://github.com/luminous-whispers/foo
-
 python foo/my_app.py
 ```
 

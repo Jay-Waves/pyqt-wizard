@@ -45,13 +45,13 @@ class ToolBar(QWidget):
 
         self.card = CardWidget()
         self.cardLayout = QHBoxLayout(self.card)
-        self.addButton = PushButton(self.tr('Add'), self.card, FluentIcon.ADD)
-        self.editButton = PushButton(self.tr('Edit'), self.card, FluentIcon.EDIT)
-        self.deleteButton = PushButton(self.tr('Delete'), self.card, FluentIcon.DELETE)
-        self.infoButton = PushButton(self.tr('Info'), self.card, FluentIcon.INFO)
-        self.shareButton = PushButton(self.tr('Share'), self.card, FluentIcon.SHARE)
-        self.saveButton = PushButton(self.tr('Save'), self.card, FluentIcon.SAVE)
-        self.proofButton = PushButton(self.tr('Proof'), self.card, FluentIcon.FINGERPRINT)
+        self.addButton = PushButton('Add', self.card, FluentIcon.ADD)
+        self.editButton = PushButton('Edit', self.card, FluentIcon.EDIT)
+        self.deleteButton = PushButton('Delete', self.card, FluentIcon.DELETE)
+        self.infoButton = PushButton('Info', self.card, FluentIcon.INFO)
+        self.shareButton = PushButton('Share', self.card, FluentIcon.SHARE)
+        self.saveButton = PushButton('Save', self.card, FluentIcon.SAVE)
+        self.proofButton = PushButton('Proof', self.card, FluentIcon.FINGERPRINT)
         self.separator = SeparatorWidget(self.card)
 
         self.stateTooltip = None

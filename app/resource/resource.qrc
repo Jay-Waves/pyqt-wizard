@@ -150,7 +150,18 @@
     </qresource>
 
     <qresource prefix="/my_app">
-        <file>images/went.png</file>
+        <file>images/users/bill_gates.png</file>
+        <file>images/users/elon_musk.png</file>
+        <file>images/users/musk.png</file>
+        <file>images/users/guido_van_rossum.png</file>
+        <file>images/users/nvidia.png</file>
+        <file>images/users/jeffrey_preston.png</file>
+        <file>images/users/richard_stallman.png</file>
+        <file>images/users/tim_berners_lee.png</file>
+        <file>images/users/linus_torvalds.png</file>
+        <file>images/users/bluetoothwarrior.png</file>
+        <file>images/users/went.png</file>
+        <file>images/users/luminous.png</file>
         <file>images/zk.png</file>
         <file>images/login.png</file>
     </qresource>
