@@ -1,18 +1,24 @@
 import json
 import os
+import resource
+from PyQt6.QtCore import QObject, pyqtSignal
 
-class UserManager:
+class UserManager(QObject):
+    # predefine default user
+    default_name = 'Mr.Null'
+    cur_name = default_name
+
+    # signals
+    userLogin = pyqtSignal(bool, str)  # directly import case User, not the class!
+    userExit =pyqtSignal()
+
     def __init__(self):
+        super().__init__(parent=None)
         path = os.path.abspath(__file__)
         self.dir = os.path.join(os.path.dirname(path), "..", "..")
-        # 确定 users.json 的绝对路径
         self.users_file = os.path.join(self.dir, "app", "data", "users.json")
         with open(self.users_file, "r") as f:
             self.users = json.load(f)
-
-        # predefine default user data:
-        self.user = 'Mr.Null: user not login'
-        self.avatar_path = os.path.join(self.dir, "app", "data", "null.png")
         
     def login(self, username, password):
         """检查用户名和密码是否匹配"""
@@ -20,22 +26,37 @@ class UserManager:
         if user:
             if user['password'] == password:
                 # init user data
-                self.user = username
-                self.avatar_path = os.path.join(self.dir, *user['avatar_path'])
-                self.user_dir = os.path.join(self.dir, *user['home_path'])
-                return True, "登录成功!"
+                self.cur_name = username
+                self.userLogin.emit(True, "登录成功!")
             else:
-                return False, "密码错误!"
+                self.userLogin.emit(False, "密码错误!")
         else:
-            return False, "用户不存在!"
+            self.userLogin.emit(False, "用户不存在!")
     
-
-if __name__ == "__main__":
-    manager = UserManager()
+    def isCurUser(self, username):
+        return self.cur_name == username
     
-    # 这里简化为使用 input() 获取用户名和密码，您可以根据需要替换为其他输入方式
-    username = input("请输入用户名: ")
-    password = input("请输入密码: ")
+    def getEmail(self):
+        # load user information
+        user = self.users.get(self.cur_name)
+        return user['email']
 
-    success, message = manager.login(username, password)
-    print(message)
+    def getAvatarPath(self):
+        # load user information
+        user = self.users.get(self.cur_name)
+        if self.cur_name == self.default_name:
+            return user['avatar_path']
+        else:
+            return os.path.join(self.dir, *user['avatar_path'])
+    
+    def exit(self):
+        # just reset
+        self.cur_name = 'Mr.Null'
+        self.userExit.emit()
+    
+    @staticmethod
+    def users_info(UserManager):
+        return    
+
+
+User = UserManager()

@@ -1,7 +1,13 @@
 {
+    "Mr.Null": {
+        "password":"123456",
+        "email": "null@buaa.edu.cn",
+        "avatar_path": ":/my_app/images/zk.png"
+
+    },
     "yjw": {
         "password": "123456",
-        "home_path": ["app","data","yjw"],
+        "email": "yujiawei@buaa.edu.cn",
         "avatar_path": ["app","data","yjw", "yjw.png"],
         "property": {
 
@@ -9,7 +15,7 @@
     },
     "swt": {
         "password": "123456",
-        "home_path": ["app","data","swt"],
+        "email": "swt@buaa.eud.cn",
         "avatar_path": ["app","data","swt", "swt.png"]
     },
     "wzw": {

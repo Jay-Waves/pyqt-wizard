@@ -26,7 +26,7 @@ from ..common.config import SUPPORT_URL, cfg
 from ..common.icon import Icon
 from ..common.signal_bus import signalBus
 from ..common import resource
-from ..common.user_manager import UserManager 
+from ..common.user_manager import User 
 
 
 class MainWindow(FluentWindow):
@@ -35,6 +35,7 @@ class MainWindow(FluentWindow):
         super().__init__()
         self.initWindow()
 
+        self.loginWindow = LoginMessageBox(self.window()) 
         # create sub interface
         self.homeInterface = HomeInterface(self)
         self.requestInterface = requestInterface(self)
@@ -47,9 +48,6 @@ class MainWindow(FluentWindow):
         self.statusInfoInterface = StatusInfoInterface(self)
 
         self.connectSignalToSlot()
-        self.user_manager = UserManager()
-
-        # add items to navigation interface
         self.initNavigation()
         self.splashScreen.finish()
 
@@ -57,6 +55,8 @@ class MainWindow(FluentWindow):
         signalBus.micaEnableChanged.connect(self.setMicaEffectEnabled)
         # signalBus.switchToSampleCard.connect(self.switchToSample)
         signalBus.supportSignal.connect(self.showMsgBox)
+        User.userLogin.connect(self._login)
+        User.userExit.connect(self._exit)
 
     def initNavigation(self):
         # add navigation items
@@ -65,8 +65,8 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.logInterface, FIF.COMMAND_PROMPT, '日志信息')
         self.navigationInterface.addSeparator()
 
-        pos = NavigationItemPosition.SCROLL
-        self.navigationInterface.addItem('people yjw', FIF.PEOPLE, '评估证书：来自用户 YJW', selectable=False, position=NavigationItemPosition.SCROLL)
+        scroll_pos = NavigationItemPosition.SCROLL
+        self.navigationInterface.addItem('people yjw', FIF.PEOPLE, '评估证书：来自用户 YJW', selectable=False, position=scroll_pos)
         self.addSubInterface(self.dateTimeInterface, FIF.CERTIFICATE, '2023 年 10 月 4 日  04 : 40', parent=self.navigationInterface.widget('people yjw'))
         self.addSubInterface(self.layoutInterface, FIF.CERTIFICATE, '2023 年 10 月 4 日  05 : 30', parent=self.navigationInterface.widget('people yjw'))
 
@@ -74,7 +74,7 @@ class MainWindow(FluentWindow):
         # add custom widget to bottom
         self.navigationInterface.addWidget(
             routeKey='user_avatar',
-            widget=NavigationAvatarWidget('none user', ':/my_app/images/zk.png'),
+            widget=NavigationAvatarWidget(User.cur_name, User.getAvatarPath()),
             onClick=self.showMsgBox,
             position=NavigationItemPosition.BOTTOM
         )
@@ -100,47 +100,59 @@ class MainWindow(FluentWindow):
     
     def showMsgBox(self):
         # change to relog in
-        username = self.user_manager.user
+        name = User.cur_name
+        email = User.getEmail()
         w = MessageBox(
             '当前用户:',
-            username,
+            f'name: {name}\nemail: {email}',
             self
         )
         w.yesButton.setText('重新登录')
         w.cancelButton.setText('返回')
-        # w.yesButton.clicked.connect(self.showLoginBox)
-
         if w.exec():
-            loginWindow = LoginMessageBox(self.user_manager, self.window()) 
-            loginWindow.exec()
+            self.loginWindow.show()
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
         self.splashScreen.resize(self.size())
+    
+    def _login(self, success, err):
+        if success:
+            self._change_avatar(User.cur_name, User.getAvatarPath())
+        else:
+            infoBox = MessageBox('Error:', err, self)
+            infoBox.yesButton.setText('重新登录')
+            infoBox.cancelButton.setText('返回')
+            if infoBox.exec():
+                self.loginWindow.show()
 
-    # def switchToSample(self, routeKey, index):
-    #     """ switch to sample """
-    #     interfaces = self.findChildren(GalleryInterface)
-    #     for w in interfaces:
-    #         if w.objectName() == routeKey:
-    #             self.stackedWidget.setCurrentWidget(w, False)
-    #             w.scrollToCard(index)
+    def _exit(self):
+        self._change_avatar(User.cur_name, User.getAvatarPath())
+
+    def _change_avatar(self, name, avatar_path):
+        navig= self.navigationInterface
+        navig.removeWidget('user_avatar')
+        navig.addWidget(
+            routeKey='user_avatar',
+            widget=NavigationAvatarWidget(name, avatar_path),
+            onClick=self.showMsgBox,
+            position=NavigationItemPosition.BOTTOM
+        )
 
 
 class LoginMessageBox(MessageBoxBase):
     """ Custom message box """
 
-    def __init__(self, user_manager, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self.w = parent
-        self.titleLabel = SubtitleLabel(self.tr('Exit and Re-LogIn'), self)
+        self.titleLabel = SubtitleLabel('Exit and Re-LogIn', self)
         self.userNameLineEdit = LineEdit(self)
         self.passwdLineEdit = LineEdit(self)
         self.banner = QPixmap(':/my_app/images/login.png')
 
-        self.userNameLineEdit.setPlaceholderText(self.tr('User Name'))
+        self.userNameLineEdit.setPlaceholderText('User Name')
         self.userNameLineEdit.setClearButtonEnabled(True)
-        self.passwdLineEdit.setPlaceholderText(self.tr('Password'))
+        self.passwdLineEdit.setPlaceholderText('Password')
         self.passwdLineEdit.setClearButtonEnabled(True)
         self.passwdLineEdit.setEchoMode(QLineEdit.EchoMode.PasswordEchoOnEdit)
 
@@ -151,14 +163,14 @@ class LoginMessageBox(MessageBoxBase):
         self.viewLayout.addWidget(self.passwdLineEdit)
 
         # change the text of button
-        self.yesButton.setText(self.tr('Login'))
-        self.cancelButton.setText(self.tr('Exit'))
+        self.yesButton.setText('Login')
+        self.cancelButton.setText('Exit')
 
         self.widget.setMinimumWidth(360)
         self.yesButton.setDisabled(True) # for valid check
         self.passwdLineEdit.textChanged.connect(self._validInput)
-        self.user_manager = user_manager
         self.yesButton.clicked.connect(self._login)
+        self.cancelButton.clicked.connect(self._exit)
 
     def _validInput(self, text):
         '''check if user input the valid username or passwd'''
@@ -168,16 +180,12 @@ class LoginMessageBox(MessageBoxBase):
     def _login(self):
         username = self.userNameLineEdit.text()
         passwd = self.passwdLineEdit.text()
-        success, err = self.user_manager.login(username, passwd)
-        if success:
-            self.w.navigationInterface.removeWidget('user_avatar')
-            self.w.navigationInterface.addWidget(
-                routeKey='user_avatar',
-                widget=NavigationAvatarWidget(self.user_manager.user, self.user_manager.avatar_path),
-                onClick=self.w.showMsgBox,
-                position=NavigationItemPosition.BOTTOM
-            )
-        return
+        self.userNameLineEdit.clear()
+        self.passwdLineEdit.clear()
+        User.login(username, passwd)
+    
+    def _exit(self):
+        User.exit()
     
     def paintEvent(self, event):
         # paint the background

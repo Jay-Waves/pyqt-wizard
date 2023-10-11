@@ -9,5 +9,4 @@ class SignalBus(QObject):
     micaEnableChanged = pyqtSignal(bool)
     supportSignal = pyqtSignal()
 
-
 signalBus = SignalBus()

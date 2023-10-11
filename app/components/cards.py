@@ -1,15 +1,89 @@
 # coding:utf-8
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QWidget, QFrame, QLabel, QVBoxLayout, QHBoxLayout, QTableWidgetItem
+from PyQt6.QtCore import Qt, QUrl, pyqtSignal
+from PyQt6.QtGui import QPixmap, QDesktopServices
+from PyQt6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget, QHBoxLayout, QTableWidgetItem
+
+from ..common.style_sheet import StyleSheet
+from ..common.signal_bus import signalBus
+from ..common.user_manager import User
 
 from qfluentwidgets import (IconWidget, TextWrap, FlowLayout, CardWidget, 
                             AvatarWidget, BodyLabel, CaptionLabel, HyperlinkButton,
                             setFont, FlyoutView, PushButton, Flyout, FlyoutAnimationType, 
-                            FluentIcon, TableView, TitleLabel, TableWidget)
-from ..common.signal_bus import signalBus
-from ..common.style_sheet import StyleSheet
+                            FluentIcon, TextWrap, SingleDirectionScrollArea, TableView, TitleLabel, TableWidget)
 
+# LinkCard, on the top
+class LinkCard(QFrame):
+
+    def __init__(self, icon, title, content, url=None, parent=None):
+        super().__init__(parent=parent)
+        if url!=None:
+            self.url = QUrl(url)
+        else:
+            self.url = None
+        self.setFixedSize(250, 246)
+        self.iconWidget = IconWidget(icon, self)
+        self.titleLabel = QLabel(title, self)
+        self.contentLabel = QLabel(TextWrap.wrap(content, 32, False)[0], self)
+        self.urlWidget = IconWidget(FluentIcon.LINK, self)
+
+        self.__initWidget()
+
+    def __initWidget(self):
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+
+        self.iconWidget.setFixedSize(60, 60)
+        self.urlWidget.setFixedSize(16, 16)
+
+        self.vBoxLayout = QVBoxLayout(self)
+        self.vBoxLayout.setSpacing(0)
+        self.vBoxLayout.setContentsMargins(24, 24, 0, 13)
+        self.vBoxLayout.addWidget(self.iconWidget)
+        self.vBoxLayout.addSpacing(22)
+        self.vBoxLayout.addWidget(self.titleLabel)
+        self.vBoxLayout.addSpacing(10)
+        self.vBoxLayout.addWidget(self.contentLabel)
+        self.vBoxLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        self.urlWidget.move(220, 210)
+        if self.url == None:
+            self.urlWidget.hide()
+
+        self.titleLabel.setObjectName('titleLabel')
+        self.contentLabel.setObjectName('contentLabel')
+
+    def mouseReleaseEvent(self, e):
+        super().mouseReleaseEvent(e)
+        if self.url!=None:
+            QDesktopServices.openUrl(self.url)
+    
+
+class LinkCardView(SingleDirectionScrollArea):
+    """ Link card view """
+
+    def __init__(self, parent=None):
+        super().__init__(parent, Qt.Orientation.Horizontal)
+        self.view = QWidget(self)
+        self.hBoxLayout = QHBoxLayout(self.view)
+
+        self.hBoxLayout.setContentsMargins(36, 0, 0, 0)
+        self.hBoxLayout.setSpacing(20)
+        self.hBoxLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+
+        self.setWidget(self.view)
+        self.setWidgetResizable(True)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
+        self.view.setObjectName('view')
+        StyleSheet.LINK_CARD.apply(self)
+
+    def addCard(self, icon, title, content, url=None):
+        """ add link card """
+        card = LinkCard(icon, title, content, url, self.view)
+        self.hBoxLayout.addWidget(card, 0, Qt.AlignmentFlag.AlignLeft)
+        return card
+
+# Profile Card
 class CustomFlyoutView(FlyoutView):
 
     def __init__(self, *args, **kwargs):
@@ -88,6 +162,7 @@ class ProfileCard(CardWidget):
         Flyout.make(self.flyout, self, self.window(), FlyoutAnimationType.SLIDE_RIGHT, isDeleteOnClose=False)
 
 
+#Info Card
 class InfoCard(CardWidget):
     """ personal information card """
 
@@ -131,33 +206,23 @@ class InfoCard(CardWidget):
         Flyout.make(self.flyout, self, self.window(), FlyoutAnimationType.SLIDE_RIGHT, isDeleteOnClose=False)
 
 
-class Frame(QFrame):
+class TableFrame(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.hBoxLayout = QHBoxLayout(self)
         self.hBoxLayout.setContentsMargins(0, 8, 0, 0)
-
-        self.setObjectName('frame')
         StyleSheet.VIEW_INTERFACE.apply(self)
 
-    def addWidget(self, widget):
-        self.hBoxLayout.addWidget(widget)
-
-
-class TableFrame(Frame):
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
         self.table = TableWidget(self)
-        self.addWidget(self.table)
+        self.hBoxLayout.addWidget(self.table)
 
         self.table.verticalHeader().hide()
         self.table.setColumnCount(5)
         self.table.setRowCount(60)
         self.table.setHorizontalHeaderLabels([
-            self.tr('Title'), self.tr('Artist'), self.tr('Album'),
-            self.tr('Year'), self.tr('Duration')
+            'Title', 'Artist', 'Album',
+            'Year', 'Duration'
         ])
 
         songInfos = [
@@ -199,7 +264,6 @@ class TableFrame(Frame):
 
         self.setFixedSize(650, 440)
         self.table.resizeColumnsToContents()
-
 
 
 class SampleCard(CardWidget):
@@ -268,11 +332,21 @@ class SampleCardView(QWidget):
         card = SampleCard(icon, title, content, routeKey, index, self)
         self.flowLayout.addWidget(card)
     
-    def addProfileCard(self, avatarPath, username, email, parent):
-        profile = ProfileCard(avatarPath, username, email, parent)
+    def addProfileCard(self, avatarPath, username, email ):
+        profile = ProfileCard(avatarPath, username, email, self)
+        self.profileCard = profile
+        profile.setObjectName('UserProfileCard')
         self.flowLayout.addWidget(profile)
 
-    def addInfoCard(self, username, email, parent):
-        infoCard = InfoCard(username, email, parent)
+    def addInfoCard(self, username, email):
+        infoCard = InfoCard(username, email, self)
+        self.infoCard = infoCard
+        infoCard.setObjectName('UserInfoCard')
         self.flowLayout.addWidget(infoCard)
+    
+    def updateUserProfile(self):
+        self.profileCard.hide()
+        self.infoCard.hide()
+        self.addInfoCard(User.cur_name, User.getEmail())
+        self.addProfileCard(User.getAvatarPath(), User.cur_name, User.getEmail())
 

@@ -7,10 +7,11 @@ from qfluentwidgets import (ScrollArea, isDarkTheme, FluentIcon, AvatarWidget, B
                             HyperlinkButton, setFont, TitleLabel)
 from ..common.config import cfg, HELP_URL, REPO_URL, EXAMPLE_URL, FEEDBACK_URL
 from ..common.icon import Icon, FluentIconBase
-from ..components.link_card import LinkCardView
-from ..components.sample_card import SampleCardView, ProfileCard
+from ..components.cards import SampleCardView, ProfileCard, LinkCardView
 from ..common.style_sheet import StyleSheet
 from ..common import resource
+from ..common.signal_bus import signalBus
+from ..common.user_manager import User
 
 
 class BannerWidget(QWidget):
@@ -103,6 +104,10 @@ class HomeInterface(ScrollArea):
         self.__initWidget()
         self.loadSamples()
 
+        # signals
+        User.userLogin.connect(self._login)
+        User.userExit.connect(self._exit)
+
     def __initWidget(self):
         self.view.setObjectName('view')
         self.setObjectName('homeInterface')
@@ -120,24 +125,42 @@ class HomeInterface(ScrollArea):
     def loadSamples(self):
         """ load samples """
 
-        basicInputView = SampleCardView(
-            self.tr("这是您:"), self.view)
-        # add read current user logic!!!
-        basicInputView.addProfileCard(':/my_app/images/users/went.png', 'SWT', 'swt@buaa.edu.cn', self)
-        basicInputView.addInfoCard('SWT', 'swt@buaa.edu.cn', self)
+        self.selfInfoView = SampleCardView("这是您:", self.view)
+        # note that infocard and profilecard's parent is home interface
+        self.selfInfoView.addInfoCard(User.cur_name, 'swt@buaa.edu.cn')
+        self.selfInfoView.addProfileCard(User.getAvatarPath(), User.cur_name, User.getEmail())
+        self.vBoxLayout.addWidget(self.selfInfoView)
+
+
+        basicInputView = SampleCardView("您的朋友们:", self.view)
+        basicInputView.addProfileCard(':/my_app/images/users/luminous.png', 'YJW', 'yujiawei@buaa.edu.cn')
+        basicInputView.addProfileCard(':/my_app/images/users/bill_gates.png', 'Bill Gates', 'Intel giveth, I takenth away')
+        basicInputView.addProfileCard(':/my_app/images/users/musk.png', 'Elon Musk', 'You are fired')
+        basicInputView.addProfileCard(':/my_app/images/users/guido_van_rossum.png', 'Guido van Rossum', 'Python is the best language')
+        basicInputView.addProfileCard(':/my_app/images/users/richard_stallman.png', 'Richard Stallman', 'I will find you, and GPL you')
+        basicInputView.addProfileCard(':/my_app/images/users/jeffrey_preston.png', 'Jeffrey Preston', 'jp')
+        basicInputView.addProfileCard(':/my_app/images/users/tim_berners_lee.png', 'Tim Berners-Lee', 'tbl')
+        basicInputView.addProfileCard(':/my_app/images/users/nvidia.png', 'Linus Torvalds', 'Fuck You! Nvidia!')
+        basicInputView.addSampleCard(
+            icon=":/gallery/images/controls/Button.png",
+            title="Button",
+            content=self.tr(
+                "A control that responds to user input and emit clicked signal."),
+            routeKey="basicInputInterface",
+            index=0
+        )
         self.vBoxLayout.addWidget(basicInputView)
 
-
         basicInputView = SampleCardView(
-            self.tr("您的朋友们:"), self.view)
-        basicInputView.addProfileCard(':/my_app/images/users/luminous.png', 'YJW', 'yujiawei@buaa.edu.cn', self)
-        basicInputView.addProfileCard(':/my_app/images/users/bill_gates.png', 'Bill Gates', 'Intel giveth, I takenth away', self)
-        basicInputView.addProfileCard(':/my_app/images/users/musk.png', 'Elon Musk', 'You are fired', self)
-        basicInputView.addProfileCard(':/my_app/images/users/guido_van_rossum.png', 'Guido van Rossum', 'Python is the best language', self)
-        basicInputView.addProfileCard(':/my_app/images/users/richard_stallman.png', 'Richard Stallman', 'I will find you, and GPL you', self)
-        basicInputView.addProfileCard(':/my_app/images/users/jeffrey_preston.png', 'Jeffrey Preston', 'jp', self)
-        basicInputView.addProfileCard(':/my_app/images/users/tim_berners_lee.png', 'Tim Berners-Lee', 'tbl', self)
-        basicInputView.addProfileCard(':/my_app/images/users/nvidia.png', 'Linus Torvalds', 'Fuck You! Nvidia!', self)
+            self.tr("金融机构:"), self.view)
+        basicInputView.addProfileCard(':/my_app/images/users/luminous.png', 'YJW', 'yujiawei@buaa.edu.cn')
+        basicInputView.addProfileCard(':/my_app/images/users/bill_gates.png', 'Bill Gates', 'Intel giveth, I takenth away')
+        basicInputView.addProfileCard(':/my_app/images/users/musk.png', 'Elon Musk', 'You are fired')
+        basicInputView.addProfileCard(':/my_app/images/users/guido_van_rossum.png', 'Guido van Rossum', 'Python is the best language')
+        basicInputView.addProfileCard(':/my_app/images/users/richard_stallman.png', 'Richard Stallman', 'I will find you, and GPL you')
+        basicInputView.addProfileCard(':/my_app/images/users/jeffrey_preston.png', 'Jeffrey Preston', 'jp')
+        basicInputView.addProfileCard(':/my_app/images/users/tim_berners_lee.png', 'Tim Berners-Lee', 'tbl')
+        basicInputView.addProfileCard(':/my_app/images/users/nvidia.png', 'Linus Torvalds', 'Fuck You! Nvidia!')
         basicInputView.addSampleCard(
             icon=":/gallery/images/controls/Button.png",
             title="Button",
@@ -148,3 +171,10 @@ class HomeInterface(ScrollArea):
         )
         self.vBoxLayout.addWidget(basicInputView)
         # add workflow image after that
+    
+    def _login(self, success, err):
+        if success:
+            self.selfInfoView.updateUserProfile()
+
+    def _exit(self):
+        self.selfInfoView.updateUserProfile()
