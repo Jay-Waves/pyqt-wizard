@@ -3,7 +3,7 @@ from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QPixmap, QPainter, QColor, QBrush, QPainterPath
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
 
-from qfluentwidgets import (ScrollArea, isDarkTheme, FluentIcon, AvatarWidget, BodyLabel, CaptionLabel, 
+from qfluentwidgets import (ScrollArea, isDarkTheme, FluentIcon, AvatarWidget,
                             HyperlinkButton, setFont, TitleLabel)
 from ..common.config import cfg, HELP_URL, REPO_URL, EXAMPLE_URL, FEEDBACK_URL
 from ..common.icon import Icon, FluentIconBase

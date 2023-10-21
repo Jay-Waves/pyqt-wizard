@@ -44,8 +44,8 @@ class ToolBar(QWidget):
         self.sourceButton = PushButton(self.tr('Source'), self, FluentIcon.GITHUB)
         self.themeButton = ToolButton(FluentIcon.CONSTRACT, self)
         self.separator = SeparatorWidget(self)
-        self.supportButton = ToolButton(FluentIcon.HEART, self)
-        self.feedbackButton = ToolButton(FluentIcon.FEEDBACK, self)
+        self.deleteButton = ToolButton(FluentIcon.DELETE, self)
+        self.refreshButton = ToolButton(FluentIcon.SYNC, self)
 
         self.vBoxLayout = QVBoxLayout(self)
         self.buttonLayout = QHBoxLayout()
@@ -70,28 +70,22 @@ class ToolBar(QWidget):
         self.buttonLayout.addStretch(1)
         self.buttonLayout.addWidget(self.themeButton, 0, Qt.AlignmentFlag.AlignRight)
         self.buttonLayout.addWidget(self.separator, 0, Qt.AlignmentFlag.AlignRight)
-        self.buttonLayout.addWidget(self.supportButton, 0, Qt.AlignmentFlag.AlignRight)
-        self.buttonLayout.addWidget(self.feedbackButton, 0, Qt.AlignmentFlag.AlignRight)
+        self.buttonLayout.addWidget(self.deleteButton, 0, Qt.AlignmentFlag.AlignRight)
+        self.buttonLayout.addWidget(self.refreshButton, 0, Qt.AlignmentFlag.AlignRight)
         self.buttonLayout.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft)
 
         self.themeButton.installEventFilter(ToolTipFilter(self.themeButton))
-        self.supportButton.installEventFilter(ToolTipFilter(self.supportButton))
-        self.feedbackButton.installEventFilter(
-            ToolTipFilter(self.feedbackButton))
-        self.themeButton.setToolTip(self.tr('Toggle theme'))
-        self.supportButton.setToolTip(self.tr('Support me'))
-        self.feedbackButton.setToolTip(self.tr('Send feedback'))
+        self.deleteButton.installEventFilter(ToolTipFilter(self.deleteButton))
+        self.refreshButton.installEventFilter(
+            ToolTipFilter(self.refreshButton))
+        self.themeButton.setToolTip('换主题')
+        self.deleteButton.setToolTip('清空')
+        self.refreshButton.setToolTip('刷新')
 
         self.themeButton.clicked.connect(lambda: toggleTheme(True))
-        self.supportButton.clicked.connect(signalBus.supportSignal)
-        self.documentButton.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl(HELP_URL)))
+        self.deleteButton.clicked.connect(signalBus.supportSignal)
         self.sourceButton.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl(EXAMPLE_URL)))
-        self.feedbackButton.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL)))
-
-
+            lambda: QDesktopServices.openUrl(QUrl("https://github.com/luminous-whispers/foo")))
 
 
 class ExampleCard(QWidget):
@@ -335,7 +329,7 @@ class LogInterface(GalleryInterface):
     def __init__(self, parent=None):
         super().__init__(
             title='日志',
-            subtitle='系统内核（零知识证明技术）及系统信息日志',
+            subtitle='零知识证明技术内核日志，以及平台操作日志。您可以在这里查阅后台输出。',
             parent=parent
         )
         self.setObjectName('logInterface')

@@ -2,7 +2,7 @@
 # coding:utf-8
 from typing import List
 
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal, QDate
 from PyQt6.QtWidgets import QApplication, QFrame, QVBoxLayout, QLabel, QWidget, QHBoxLayout
 from qfluentwidgets import (FluentIcon, IconWidget, FlowLayout, isDarkTheme,
                             Theme, applyThemeColor, SmoothScrollArea, SearchLineEdit, StrongBodyLabel,
@@ -154,11 +154,13 @@ class RangesCardView(QWidget):
     def __init__(self, ranges: List, parent=None):
         super().__init__(parent=parent)
         self.trie = Trie()
-        self.iconLibraryLabel = StrongBodyLabel('征信评估指标仓库', self)
+        self.iconLibraryLabel = StrongBodyLabel('征信评估标准 参考小项', self)
         self.bar = QWidget(self)
         self.barLayout = QHBoxLayout(self.bar)
         self.searchLineEdit = LineEdit(self.bar)
         self.dataPicker = ZhDatePicker(self.bar)
+        self.dataPicker.setDate(QDate.currentDate())
+        self.dueLabel = QLabel('该标准有效期截至：', self.bar)
 
         self.view = QFrame(self)
         self.scrollArea = SmoothScrollArea(self.view)
@@ -189,8 +191,10 @@ class RangesCardView(QWidget):
         self.vBoxLayout.addWidget(self.view)
 
         self.barLayout.setContentsMargins(10, 0, 0, 0)
-        self.barLayout.addWidget(self.dataPicker, 0, Qt.AlignmentFlag.AlignLeft)
-        self.barLayout.addWidget(self.searchLineEdit, 0, Qt.AlignmentFlag.AlignRight)
+        self.barLayout.addWidget(self.dueLabel)# Qt.AlignmentFlag.AlignLeft)
+        self.barLayout.addWidget(self.dataPicker)
+        self.barLayout.addStretch(1)
+        self.barLayout.addWidget(self.searchLineEdit)
 
         self.hBoxLayout.setSpacing(0)
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
@@ -236,6 +240,7 @@ class RangesCardView(QWidget):
     def __setQss(self):
         self.view.setObjectName('iconView')
         self.scrollWidget.setObjectName('scrollWidget')
+        self.dueLabel.setObjectName('dueLabel')
 
         StyleSheet.ICON_INTERFACE.apply(self)
         StyleSheet.ICON_INTERFACE.apply(self.scrollWidget)

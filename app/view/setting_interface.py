@@ -225,4 +225,4 @@ class SettingInterface(ScrollArea):
 
         # about
         self.feedbackCard.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL)))
+            lambda: QDesktopServices.openUrl(QUrl("https://github.com/luminous-whispers/foo/issues")))

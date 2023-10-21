@@ -1,5 +1,7 @@
 GalleryInterface,
 ToolBar,
+#ProofInterface,
+#RequestInterface,
 #view {
     background-color: transparent;
 }

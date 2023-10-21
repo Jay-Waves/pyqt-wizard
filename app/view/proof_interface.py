@@ -5,7 +5,8 @@ from PyQt6.QtCore import Qt
 from qfluentwidgets import (DatePicker, TimePicker, AMTimePicker, 
                             ZhDatePicker, CalendarPicker, ScrollArea, 
                             TreeWidget, InfoBar, InfoBarPosition,
-                            FluentIcon, PushButton)
+                            FluentIcon, PushButton, TitleLabel, 
+                            CaptionLabel, CardWidget)
 
 from ..common.style_sheet import StyleSheet
 from ..components.profile_cardview import TableFrame
@@ -17,10 +18,25 @@ class TreeFrame(QFrame):
         self.tree = TreeWidget(self)
         self.table = TableFrame(self)
         self.menu = None
-
+        title = TitleLabel('验证界面')
+        subtitle = CaptionLabel('显示收到的零知识证明，您可以选中一个然后开始验证')
+        self.leftFrame = QFrame(self)
+        self.card = CardWidget(self)
+        self.cardLayout = QVBoxLayout(self.card)
         self.hLayout = QHBoxLayout(self)
+        self.vLayout = QVBoxLayout(self.leftFrame)
+
+        self.cardLayout.setContentsMargins(5, 10, 10, 10)
+        self.cardLayout.addWidget(self.tree)
+
+        self.vLayout.setContentsMargins(0, 0, 0, 0)
+        self.vLayout.setSpacing(15)
+        self.vLayout.addWidget(title)
+        self.vLayout.addWidget(subtitle)
+        self.vLayout.addWidget(self.card)
+
         self.hLayout.setContentsMargins(20, 0, 0, 0)
-        self.hLayout.addWidget(self.tree)
+        self.hLayout.addWidget(self.leftFrame)
         self.hLayout.setSpacing(10)
         self.hLayout.addWidget(self.table)
 
@@ -74,7 +90,7 @@ class TreeFrame(QFrame):
             # set menu bar
             self.menu.addWidget(PushButton('验证'))
             self.menu.addWidget(PushButton('删除'))
-            self.menu.setCustomBackgroundColor("white", "#2a2a2a")
+            self.menu.setCustomBackgroundColor("#00ffff", "#2a2a2a")
             # when menu closed, qt will destroy obj, then python holds meaningless ptr
             self.menu.destroyed.connect(lambda: setattr(self, 'menu', None))
             self.menu.show()
@@ -85,12 +101,11 @@ class ProofInterface(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.setObjectName('ProofInterface')
         self.vLayout = QVBoxLayout(self)
 
         # set scrollarea
         self.vLayout.setSpacing(20)
-        self.vLayout.setContentsMargins(10, 10, 10, 15)
+        self.vLayout.setContentsMargins(0, 10, 10, 15)
         self.vLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # add widget 
@@ -98,5 +113,5 @@ class ProofInterface(QWidget):
         self.vLayout.addWidget(self.tree)
 
         # apply qss
-        self.setObjectName('view')
+        self.setObjectName('ProofInterface')
         StyleSheet.GALLERY_INTERFACE.apply(self)

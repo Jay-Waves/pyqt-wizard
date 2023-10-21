@@ -1,20 +1,17 @@
 # coding:utf-8
-from PyQt6.QtCore import Qt, pyqtSignal, QUrl, QEvent, QTimer
+from PyQt6.QtCore import Qt, pyqtSignal, QUrl, QEvent
 from PyQt6.QtGui import QDesktopServices, QPainter, QPen, QColor
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QFrame
 
 from qfluentwidgets import (ScrollArea, PushButton, ToolButton, FluentIcon,
-                            isDarkTheme, IconWidget, Theme, ToolTipFilter, TitleLabel, CaptionLabel,
-                            StrongBodyLabel, BodyLabel, toggleTheme, CommandBar, Action, CardWidget,
-                            IndeterminateProgressBar, StateToolTip, InfoBarPosition, InfoBar, InfoBarIcon)
+                            isDarkTheme, IconWidget, Theme, ToolTipFilter, 
+                            TitleLabel, CaptionLabel,
+                            StrongBodyLabel, BodyLabel, toggleTheme)
 from ..common.config import cfg, FEEDBACK_URL, HELP_URL, EXAMPLE_URL
 from ..common.icon import Icon
 from ..common.style_sheet import StyleSheet
 from ..backend.signal_bus import signalBus
-from ..backend.zkrp import zkrp
-import time
 
-AF = Qt.AlignmentFlag
 
 class SeparatorWidget(QWidget):
     """ Seperator widget """
@@ -43,95 +40,54 @@ class ToolBar(QWidget):
         self.titleLabel = TitleLabel(title, self)
         self.subtitleLabel = CaptionLabel(subtitle, self)
 
+        self.documentButton = PushButton(
+            self.tr('Documentation'), self, FluentIcon.DOCUMENT)
+        self.sourceButton = PushButton(self.tr('Source'), self, FluentIcon.GITHUB)
+        self.themeButton = ToolButton(FluentIcon.CONSTRACT, self)
+        self.separator = SeparatorWidget(self)
+        self.deleteButton = ToolButton(FluentIcon.DELETE, self)
+        self.refreshButton = ToolButton(FluentIcon.SYNC, self)
+
         self.vBoxLayout = QVBoxLayout(self)
-
-        self.card = CardWidget()
-        self.cardLayout = QHBoxLayout(self.card)
-        self.addButton = PushButton('Add', self.card, FluentIcon.ADD)
-        self.editButton = PushButton('Edit', self.card, FluentIcon.EDIT)
-        self.deleteButton = PushButton('Delete', self.card, FluentIcon.DELETE)
-        self.infoButton = PushButton('Info', self.card, FluentIcon.INFO)
-        self.shareButton = PushButton('Share', self.card, FluentIcon.SHARE)
-        self.saveButton = PushButton('Save', self.card, FluentIcon.SAVE)
-        self.proofButton = PushButton('Proof', self.card, FluentIcon.FINGERPRINT)
-        self.separator = SeparatorWidget(self.card)
-
-        self.stateTooltip = None
-        self.progressBar = IndeterminateProgressBar(self)
+        self.buttonLayout = QHBoxLayout()
 
         self.__initWidget()
 
     def __initWidget(self):
-        self.setFixedHeight(180)
+        self.setFixedHeight(138)
         self.vBoxLayout.setSpacing(0)
         self.vBoxLayout.setContentsMargins(36, 22, 36, 12)
         self.vBoxLayout.addWidget(self.titleLabel)
-        self.vBoxLayout.addSpacing(15)
+        self.vBoxLayout.addSpacing(4)
         self.vBoxLayout.addWidget(self.subtitleLabel)
-        self.vBoxLayout.addSpacing(15)
-        self.vBoxLayout.addWidget(self.card, 1)
-        self.vBoxLayout.addSpacing(15)
-        self.vBoxLayout.addWidget(self.progressBar, 1)
-        self.vBoxLayout.setAlignment(AF.AlignTop)
+        self.vBoxLayout.addSpacing(4)
+        self.vBoxLayout.addLayout(self.buttonLayout, 1)
+        self.vBoxLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        self.card.setFixedHeight(55)
-        # self.cardLayout.setSpacing(20)
-        self.cardLayout.setSpacing(15)
-        self.cardLayout.setContentsMargins(15, 0, 10, 0)
-        self.cardLayout.addWidget(self.addButton, 0, AF.AlignLeft)
-        self.cardLayout.addWidget(self.editButton, 0, AF.AlignLeft)
-        self.cardLayout.addWidget(self.deleteButton, 0, AF.AlignLeft)
-        self.cardLayout.addWidget(self.infoButton, 0, AF.AlignLeft)
-        self.cardLayout.addStretch(1)
-        self.cardLayout.addWidget(self.separator, 0, AF.AlignRight)
-        self.cardLayout.addWidget(self.shareButton, 0, AF.AlignLeft)
-        self.cardLayout.addWidget(self.proofButton, 0, AF.AlignLeft)
-        self.cardLayout.addWidget(self.saveButton, 0, AF.AlignLeft)
-        self.cardLayout.setAlignment(AF.AlignVCenter | AF.AlignLeft)
+        self.buttonLayout.setSpacing(4)
+        self.buttonLayout.setContentsMargins(0, 0, 0, 0)
+        self.buttonLayout.addWidget(self.documentButton, 0, Qt.AlignmentFlag.AlignLeft)
+        self.buttonLayout.addWidget(self.sourceButton, 0, Qt.AlignmentFlag.AlignLeft)
+        self.buttonLayout.addStretch(1)
+        self.buttonLayout.addWidget(self.themeButton, 0, Qt.AlignmentFlag.AlignRight)
+        self.buttonLayout.addWidget(self.separator, 0, Qt.AlignmentFlag.AlignRight)
+        self.buttonLayout.addWidget(self.deleteButton, 0, Qt.AlignmentFlag.AlignRight)
+        self.buttonLayout.addWidget(self.refreshButton, 0, Qt.AlignmentFlag.AlignRight)
+        self.buttonLayout.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft)
+
+        self.themeButton.installEventFilter(ToolTipFilter(self.themeButton))
+        self.deleteButton.installEventFilter(ToolTipFilter(self.deleteButton))
+        self.refreshButton.installEventFilter(
+            ToolTipFilter(self.refreshButton))
+        self.themeButton.setToolTip('换主题')
+        self.deleteButton.setToolTip('清空')
+        self.refreshButton.setToolTip('刷新')
+
+        self.themeButton.clicked.connect(lambda: toggleTheme(True))
+        self.deleteButton.clicked.connect(signalBus.supportSignal)
 
 
-        # self.themeButton.installEventFilter(ToolTipFilter(self.themeButton))
-        # self.proofButton.setToolTip(self.tr('send request for zk proof'))
 
-        # action triggered
-        self.addButton.clicked.connect(self.onAdd)
-        self.editButton.clicked.connect(self.onEdit)
-        self.progressBar.hide()
-        self.proofButton.clicked.connect(self.onProof)
-
-        # experiment
-        self.cnt = 0
-    
-    def onAdd(self):
-        print('add clicked')
-
-    def onEdit(self):
-        print('edit clicked')
-
-    def onProof(self):
-        self.progressBar.show()
-        self.stateTooltip = StateToolTip(
-            '证明中...', '请在日志界面查看详细输出', self.window())
-        self.sender().setText('Proofing')
-        self.stateTooltip.move(self.stateTooltip.getSuitablePos())
-        self.stateTooltip.show()
-        QTimer.singleShot(3000, self._hideTips) # after fixed time, hide the status info flyout
-
-        zkrp.proving()
-    
-    def _hideTips(self):
-        self.progressBar.hide()
-        self.stateTooltip.hide()
-
-        InfoBar.success(
-            title='Success',
-            content="生成证明成功, 你可以在证明存储界面选择将其分享给其他人",
-            orient=Qt.Orientation.Horizontal,
-            isClosable=True,
-            duration=3000,
-            position=InfoBarPosition.TOP,
-            parent=self
-        )
 
 class ExampleCard(QWidget):
     """ Example card """
@@ -235,7 +191,7 @@ class GalleryInterface(ScrollArea):
 
         self.vBoxLayout.setSpacing(30)
         self.vBoxLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.vBoxLayout.setContentsMargins(36, 20, 36, 20)
+        self.vBoxLayout.setContentsMargins(36, 20, 36, 36)
 
         self.view.setObjectName('view')
         StyleSheet.GALLERY_INTERFACE.apply(self)

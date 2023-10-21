@@ -40,6 +40,9 @@ class UserManager(QObject):
     
     def isCurUser(self, username):
         return self.cur_name == username
+
+    def isDefaultUser(self):
+        return self.cur_name == self.default_name 
     
     def getEmail(self):
         # load user information
@@ -49,7 +52,7 @@ class UserManager(QObject):
     def getAvatarPath(self):
         # load user information
         user = self.users.get(self.cur_name)
-        if self.cur_name == self.default_name:
+        if self.isDefaultUser():
             return user['avatar_path']
         else:
             return os.path.join(self.dir, *user['avatar_path'])
@@ -76,7 +79,7 @@ class UserManager(QObject):
             return ranges
     
     def getLogPath(self):
-        if self.cur_name == User.default_name:
+        if self.isDefaultUser():
             raise ValueError('User Not Login')
             # later change to error msg box signal
         return os.path.join(self.dir, "app", "data", self.cur_name, "log")

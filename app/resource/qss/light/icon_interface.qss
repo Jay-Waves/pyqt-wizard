@@ -21,7 +21,12 @@ IconCard[isSelected=true] QLabel {
     background-color: rgb(243, 243, 243);
 }
 
-IconCardView {
+#dueLabel{
+    color: rgb(96, 96, 96);
+    font: 14px 'Segoe UI', 'PingFang SC';
+}
+
+RangesCardView {
     background-color: transparent;
 }
 
