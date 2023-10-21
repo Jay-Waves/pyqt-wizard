@@ -16,7 +16,8 @@ This repository contains the frontend application for our Cryptography Competiti
 ## Prerequisites
 
 - Python 3.8 or later
-- Linux recommanded; Windows only feasible in theory
+- Ubuntu 22.04, or Arch Linux
+- x86, or amd64
 
 ## Installation
 
