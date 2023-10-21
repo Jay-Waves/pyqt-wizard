@@ -9,7 +9,7 @@ from qfluentwidgets import (ScrollArea, PushButton, ToolButton, FluentIcon,
 from ..common.config import cfg, FEEDBACK_URL, HELP_URL, EXAMPLE_URL
 from ..common.icon import Icon
 from ..common.style_sheet import StyleSheet
-from ..common.signal_bus import signalBus
+from ..backend.signal_bus import signalBus
 
 
 class SeparatorWidget(QWidget):

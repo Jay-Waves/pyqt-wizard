@@ -1,16 +1,18 @@
 # coding:utf-8
-from PyQt6.QtCore import Qt, pyqtSignal, QUrl, QEvent
+from PyQt6.QtCore import Qt, pyqtSignal, QUrl, QEvent, QTimer
 from PyQt6.QtGui import QDesktopServices, QPainter, QPen, QColor
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QFrame
 
 from qfluentwidgets import (ScrollArea, PushButton, ToolButton, FluentIcon,
                             isDarkTheme, IconWidget, Theme, ToolTipFilter, TitleLabel, CaptionLabel,
                             StrongBodyLabel, BodyLabel, toggleTheme, CommandBar, Action, CardWidget,
-                            IndeterminateProgressBar, StateToolTip)
+                            IndeterminateProgressBar, StateToolTip, InfoBarPosition, InfoBar, InfoBarIcon)
 from ..common.config import cfg, FEEDBACK_URL, HELP_URL, EXAMPLE_URL
 from ..common.icon import Icon
 from ..common.style_sheet import StyleSheet
-from ..common.signal_bus import signalBus
+from ..backend.signal_bus import signalBus
+from ..backend.zkrp import zkrp
+import time
 
 AF = Qt.AlignmentFlag
 
@@ -107,26 +109,29 @@ class ToolBar(QWidget):
         print('edit clicked')
 
     def onProof(self):
-        print('proof clicked')
-        if self.progressBar.isHidden():
-            self.progressBar.show()
-        else:
-            self.progressBar.hide()
-        
-        # create state tool tip
-        if self.stateTooltip:
-            self.cnt += 1
-            self.stateTooltip.setContent(
-                f'hello!{self.cnt}')
-            # self.sender().setText('Proof')
-            # self.stateTooltip.setState(True)
-            # self.stateTooltip = None
-        else:
-            self.stateTooltip = StateToolTip(
-                'Training model', 'Please wait patiently  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', self.window())
-            self.sender().setText('Proofing')
-            self.stateTooltip.move(self.stateTooltip.getSuitablePos())
-            self.stateTooltip.show()
+        self.progressBar.show()
+        self.stateTooltip = StateToolTip(
+            '证明中...', '请在日志界面查看详细输出', self.window())
+        self.sender().setText('Proofing')
+        self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+        self.stateTooltip.show()
+        QTimer.singleShot(3000, self._hideTips) # after fixed time, hide the status info flyout
+
+        zkrp.proving()
+    
+    def _hideTips(self):
+        self.progressBar.hide()
+        self.stateTooltip.hide()
+
+        InfoBar.success(
+            title='Success',
+            content="生成证明成功, 你可以在证明存储界面选择将其分享给其他人",
+            orient=Qt.Orientation.Horizontal,
+            isClosable=True,
+            duration=3000,
+            position=InfoBarPosition.TOP,
+            parent=self
+        )
 
 class ExampleCard(QWidget):
     """ Example card """

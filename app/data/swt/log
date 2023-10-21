@@ -1,0 +1,78 @@
+Running main() from gtest_main.cc
+[==========] Running 3 tests from 3 test cases.
+[----------] Global test environment set-up.
+[----------] 1 test from Rangeproof
+[ RUN      ] Rangeproof.SimpleTest
+field_size_bits is 63
+random_vector_number is 1
+/root/WorkSpace/Sharp-PQ/range_proof/tests/test_fri.cpp:273: Failure
+Value of: 0
+  Actual: false
+Expected: true
+[  FAILED  ] Rangeproof.SimpleTest (0 ms)
+[----------] 1 test from Rangeproof (0 ms total)
+
+[----------] 1 test from FRIMultiplicativeTrueTest
+[ RUN      ] FRIMultiplicativeTrueTest.SimpleTest
+[       OK ] FRIMultiplicativeTrueTest.SimpleTest (7 ms)
+[----------] 1 test from FRIMultiplicativeTrueTest (7 ms total)
+
+[----------] 1 test from InnerProductTest
+[ RUN      ] InnerProductTest.SimpleTest
+proof_size_field is 10
+proof_size_hash is 3
+(enter) Setting Inner Product Verifier     	[             ]	(1697782498.0258s x0.00 from start)
+(leave) Setting Inner Product Verifier     	[0.0311s x1.00]	(1697782498.0569s x0.00 from start)
+(enter) Inner Product Prover               	[             ]	(1697782498.0570s x0.00 from start)
+  (enter) Setting Inner Product Prover and compute the first round	[             ]	(1697782498.0570s x0.00 from start)
+    (enter) Computing vanishing_polynomial     	[             ]	(1697782498.0636s x0.00 from start)
+    (leave) Computing vanishing_polynomial     	[0.0001s x1.00]	(1697782498.0637s x0.00 from start)
+    (enter) Computing Polynomials for sumcheck 	[             ]	(1697782498.0637s x0.00 from start)
+      (enter) Compute s_v                        	[             ]	(1697782498.0637s x0.00 from start)
+        (enter) Compute evaluation                 	[             ]	(1697782498.0637s x0.00 from start)
+        (leave) Compute evaluation                 	[0.0009s x1.00]	(1697782498.0646s x0.00 from start)
+        (enter) delete zero                        	[             ]	(1697782498.0646s x0.00 from start)
+        (leave) delete zero                        	[0.0003s x1.01]	(1697782498.0649s x0.00 from start)
+      (leave) Compute s_v                        	[0.0013s x1.00]	(1697782498.0649s x0.00 from start)
+      (enter) Compute h and p                    	[             ]	(1697782498.0649s x0.00 from start)
+      (leave) Compute h and p                    	[0.0000s x1.02]	(1697782498.0650s x0.00 from start)
+    (leave) Computing Polynomials for sumcheck 	[0.0013s x1.00]	(1697782498.0650s x0.00 from start)
+    (enter) Generate query set                 	[             ]	(1697782498.0650s x0.00 from start)
+    (leave) Generate query set                 	[0.0000s x1.06]	(1697782498.0650s x0.00 from start)
+    (enter) Committing to Secret Polynomials for IPA	[             ]	(1697782498.0650s x0.00 from start)
+    (leave) Committing to Secret Polynomials for IPA	[0.0000s x1.09]	(1697782498.0650s x0.00 from start)
+    (enter) Committing to h polynomial for IPA 	[             ]	(1697782498.0650s x0.00 from start)
+    (leave) Committing to h polynomial for IPA 	[0.0010s x1.00]	(1697782498.0660s x0.00 from start)
+    (enter) Proving the first round for sumcheck	[             ]	(1697782498.0661s x0.00 from start)
+    (leave) Proving the first round for sumcheck	[0.0058s x1.00]	(1697782498.0718s x0.00 from start)
+  (leave) Setting Inner Product Prover and compute the first round	[0.0149s x1.00]	(1697782498.0719s x0.00 from start)
+  (enter) Proving all the remained rounds for FRI	[             ]	(1697782498.0719s x0.00 from start)
+    (enter) Proving the next round FRI         	[             ]	(1697782498.0719s x0.00 from start)
+    (leave) Proving the next round FRI         	[0.0002s x1.01]	(1697782498.0720s x0.00 from start)
+    (enter) Proving the next round FRI         	[             ]	(1697782498.0721s x0.00 from start)
+    (leave) Proving the next round FRI         	[0.0001s x1.01]	(1697782498.0722s x0.00 from start)
+  (leave) Proving all the remained rounds for FRI	[0.0003s x1.00]	(1697782498.0722s x0.00 from start)
+(leave) Inner Product Prover               	[0.0152s x1.00]	(1697782498.0722s x0.00 from start)
+(enter) Inner Product Verifier             	[             ]	(1697782498.0722s x0.00 from start)
+  (enter) Setting parameters                 	[             ]	(1697782498.0722s x0.00 from start)
+  (leave) Setting parameters                 	[0.0000s x1.02]	(1697782498.0723s x0.00 from start)
+  (enter) Computig evaluations of v and s    	[             ]	(1697782498.0723s x0.00 from start)
+  (leave) Computig evaluations of v and s    	[0.0000s x1.12]	(1697782498.0723s x0.00 from start)
+  (enter) Verifying                          	[             ]	(1697782498.0723s x0.00 from start)
+    (enter) Verify the first round             	[             ]	(1697782498.0726s x0.00 from start)
+    (leave) Verify the first round             	[0.0004s x1.00]	(1697782498.0730s x0.00 from start)
+    (enter) Verify the first round             	[             ]	(1697782498.0733s x0.00 from start)
+    (leave) Verify the first round             	[0.0002s x1.00]	(1697782498.0736s x0.00 from start)
+  (leave) Verifying                          	[0.0014s x1.00]	(1697782498.0737s x0.00 from start)
+  Protocol runs successfully! 
+(leave) Inner Product Verifier             	[0.0015s x1.00]	(1697782498.0737s x0.00 from start)
+[       OK ] InnerProductTest.SimpleTest (163 ms)
+[----------] 1 test from InnerProductTest (163 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 3 test cases ran. (170 ms total)
+[  PASSED  ] 2 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] Rangeproof.SimpleTest
+
+ 1 FAILED TEST

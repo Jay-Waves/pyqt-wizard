@@ -1,4 +1,4 @@
-GalleryInterface, ToolBar, #view {
+GalleryInterface, ProofInterface, ToolBar, #view {
     background-color: transparent;
 }
 

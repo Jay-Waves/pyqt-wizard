@@ -7,26 +7,18 @@ from qfluentwidgets import (NavigationAvatarWidget, NavigationItemPosition, Mess
                             SplashScreen, setTheme, Theme, MessageBoxBase, SubtitleLabel, LineEdit)
 from qfluentwidgets import FluentIcon as FIF
 
-from .gallery_interface import GalleryInterface
 from .home_interface import HomeInterface
-from .basic_input_interface import BasicInputInterface
-from .date_time_interface import DateTimeInterface
+from .proof_interface import ProofInterface
 from .log_interface import LogInterface
-from .layout_interface import LayoutInterface
-from .request_interface import requestInterface
-from .material_interface import MaterialInterface
-from .menu_interface import MenuInterface
-from .navigation_view_interface import NavigationViewInterface
-from .scroll_interface import ScrollInterface
-from .status_info_interface import StatusInfoInterface
+# from .layout_interface import LayoutInterface
+from .request_interface import RequestInterface
+from .range_interface import RangeInterface
 from .setting_interface import SettingInterface
-from .text_interface import TextInterface
-from .view_interface import ViewInterface
 from ..common.config import SUPPORT_URL, cfg
 from ..common.icon import Icon
-from ..common.signal_bus import signalBus
 from ..common import resource
-from ..common.user_manager import User 
+from ..backend.signal_bus import signalBus
+from ..backend.user_manager import User 
 
 
 class MainWindow(FluentWindow):
@@ -38,14 +30,11 @@ class MainWindow(FluentWindow):
         self.loginWindow = LoginMessageBox(self.window()) 
         # create sub interface
         self.homeInterface = HomeInterface(self)
-        self.requestInterface = requestInterface(self)
+        self.requestInterface = RequestInterface('DefineRangePage', self)
         self.logInterface = LogInterface(self)
         self.settingInterface = SettingInterface(self)
-
-        self.basicInputInterface = BasicInputInterface(self)
-        self.dateTimeInterface = DateTimeInterface(self)
-        self.layoutInterface = LayoutInterface(self)
-        self.statusInfoInterface = StatusInfoInterface(self)
+        self.proofInterface = ProofInterface(self)
+        self.rangePages = []
 
         self.connectSignalToSlot()
         self.initNavigation()
@@ -55,20 +44,20 @@ class MainWindow(FluentWindow):
         signalBus.micaEnableChanged.connect(self.setMicaEffectEnabled)
         # signalBus.switchToSampleCard.connect(self.switchToSample)
         signalBus.supportSignal.connect(self.showMsgBox)
+        signalBus.newRangeInterface.connect(self._addRangeInterface)
         User.userLogin.connect(self._login)
         User.userExit.connect(self._exit)
 
     def initNavigation(self):
         # add navigation items
         self.addSubInterface(self.homeInterface, FIF.HOME, '首页')
-        self.addSubInterface(self.requestInterface, FIF.PENCIL_INK, '评估申请')
+        self.addSubInterface(self.requestInterface, FIF.PENCIL_INK, '制定放贷标准')
         self.addSubInterface(self.logInterface, FIF.COMMAND_PROMPT, '日志信息')
         self.navigationInterface.addSeparator()
 
         scroll_pos = NavigationItemPosition.SCROLL
-        self.navigationInterface.addItem('people yjw', FIF.PEOPLE, '评估证书：来自用户 YJW', selectable=False, position=scroll_pos)
-        self.addSubInterface(self.dateTimeInterface, FIF.CERTIFICATE, '2023 年 10 月 4 日  04 : 40', parent=self.navigationInterface.widget('people yjw'))
-        self.addSubInterface(self.layoutInterface, FIF.CERTIFICATE, '2023 年 10 月 4 日  05 : 30', parent=self.navigationInterface.widget('people yjw'))
+        self.addSubInterface(self.proofInterface, FIF.FINGERPRINT, '收到的征信证明', position=scroll_pos)
+        self.navigationInterface.addItem('range', FIF.PEOPLE, '他人的放贷标准', selectable=False, position=scroll_pos)
 
         self.addSubInterface(self.settingInterface, FIF.SETTING, '设置', NavigationItemPosition.BOTTOM)
         # add custom widget to bottom
@@ -80,7 +69,8 @@ class MainWindow(FluentWindow):
         )
 
     def initWindow(self):
-        self.resize(1180, 760)
+        # self.resize(1180, 760)
+        self.setFixedSize(1180, 760)
         self.setMinimumWidth(760)
         self.setWindowIcon(QIcon(FIF.IOT.icon()))
         self.setWindowTitle('基于零知识证明的征信评估平台')
@@ -119,6 +109,12 @@ class MainWindow(FluentWindow):
     def _login(self, success, err):
         if success:
             self._change_avatar(User.cur_name, User.getAvatarPath())
+            self.switchTo(self.homeInterface)
+            # remove all range and proof interface:
+            # myWidget = self.navigationInterface.widget('range')
+            # navPanelLayout = myWidget.parent().layout()
+            # navPanelLayout.removeWidget(myWidget)
+            self.navigationInterface.addItem('range', FIF.PEOPLE, '他人的放贷标准', selectable=False, position=NavigationItemPosition.SCROLL)
         else:
             infoBox = MessageBox('Error:', err, self)
             infoBox.yesButton.setText('重新登录')
@@ -128,6 +124,7 @@ class MainWindow(FluentWindow):
 
     def _exit(self):
         self._change_avatar(User.cur_name, User.getAvatarPath())
+        # remove all range and proof interface:
 
     def _change_avatar(self, name, avatar_path):
         navig= self.navigationInterface
@@ -138,7 +135,16 @@ class MainWindow(FluentWindow):
             onClick=self.showMsgBox,
             position=NavigationItemPosition.BOTTOM
         )
+    
+    def _addRangeInterface(self, src_name):
+        ranges = User.getUserRanges(src_name)
+        routeKey = src_name+'RangePage'
+        new_page = RangeInterface(routeKey, ranges, self)
+        self.rangePages.append(new_page)
+        self.addSubInterface(new_page, FIF.DOCUMENT, f'from {src_name}', parent=self.navigationInterface.widget('range'))
 
+        self.switchTo(new_page)
+    
 
 class LoginMessageBox(MessageBoxBase):
     """ Custom message box """

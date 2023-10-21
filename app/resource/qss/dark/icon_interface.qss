@@ -4,7 +4,7 @@ IconCard {
     border-radius: 6px;
 }
 
-IconCard > QLabel {
+IconCard  QLabel {
     color: rgb(207, 207, 207);
     font: 11px 'Segoe UI', 'PingFang SC';
 }
@@ -13,7 +13,7 @@ IconCard[isSelected=true] {
     background-color: --ThemeColorPrimary;
 }
 
-IconCard[isSelected=true] > QLabel {
+IconCard[isSelected=true]  QLabel {
     color: black;
 }
 

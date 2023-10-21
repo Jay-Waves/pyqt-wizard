@@ -1,0 +1,193 @@
+[
+
+    {
+        "name": "近6月平均收入",
+        "en_name": "6-Month Average Income",
+        "category": "金融资产",
+        "introduction": "收入",
+        "icon": "Add",
+        "up": 50000,
+        "down": 10000,
+        "unit": "美元"
+    },
+    {
+        "name": "纳税",
+        "en_name": "Tax Paid",
+        "category": "金融资产",
+        "introduction": "近6月平均纳税水平",
+        "icon": "DictionaryAdd",
+        "up": 2000,
+        "down": 1000,
+        "unit": "美元"
+    },
+    {
+        "name": "不动产资产",
+        "en_name": "Real Estate Assets",
+        "category": "实物资产",
+        "introduction": "房产(住宅), 土地",
+        "icon": "Home",
+        "up": 1000000,
+        "down": 100000,
+        "unit": "美元"
+    },
+    {
+        "name": "物品资产",
+        "en_name": "Physical Assets",
+        "category": "实物资产",
+        "introduction": "交通工具(车辆), 珠宝, 艺术品等",
+        "icon": "Car",
+        "up": 300000,
+        "down": 5000,
+        "unit": "美元"
+    },
+    {
+        "name": "银行存款",
+        "en_name": "Bank Deposits",
+        "category": "金融资产",
+        "introduction": "银行定期存款与存折资产",
+        "icon": "LibraryFill",
+        "up": 200000,
+        "down": 1000,
+        "unit": "美元"
+    },
+    {
+        "name": "现金",
+        "en_name": "Cash",
+        "category": "金融资产",
+        "introduction": "属于金融资产的一种",
+        "icon": "Dictionary",
+        "up": 50000,
+        "down": 0,
+        "unit": "美元"
+    },
+    {
+        "name": "投资资产",
+        "en_name": "Investment Assets",
+        "category": "金融资产",
+        "introduction": "所拥有债券, 资金, 股票额度",
+        "icon": "PencilInk", 
+        "up": 500000,
+        "down": 5000,
+        "unit": "美元"
+    },
+    {
+        "name": "数字资产",
+        "en_name": "Digital Assets",
+        "category": "数字资产",
+        "introduction": "加密货币, 数字藏品",
+        "icon": "Fingerprint",
+        "up": 100000,
+        "down": 0,
+        "unit": "美元"
+    },
+    {
+        "name": "保险资产",
+        "en_name": "Insurance Assets",
+        "category": "保险资产",
+        "introduction": "人寿保险, 意外伤害保险, 健康保险等",
+        "icon": "VPN",
+        "up": 500000,
+        "down": 5000,
+        "unit": "美元"
+    },
+    {
+        "name": "呆账数",
+        "en_name": "Bad Debt Count",
+        "category": "征信指标",
+        "introduction": "持有银行坏账总数",
+        "icon": "CareUpSolid",
+        "up": 5,
+        "down": 0,
+        "unit": "笔"
+    },
+    {
+        "name": "担保",
+        "en_name": "Guarantee",
+        "category": "征信指标",
+        "introduction": "已承担的担保金额",
+        "icon": "Certificate",
+        "up": 200000,
+        "down": 0,
+        "unit": "美元"
+    },
+    {
+        "name": "循坏贷逾期账户数",
+        "en_name": "Rotating Loan Overdue Accounts",
+        "category": "偿债能力",
+        "introduction": "持有的信用卡逾期的账户总数",
+        "icon": "SendFill",
+        "up": 3,
+        "down": 0,
+        "unit": "笔"
+    },
+    {
+        "name": "循环贷逾期最大数额",
+        "en_name": "Max Overdue Amount of Rotating Loan",
+        "category": "偿债能力",
+        "introduction": "持有的信用卡逾期的金额总数",
+        "icon": "Asterisk",
+        "up": 10000,
+        "down": 0,
+        "unit": "美元"
+    },
+    {
+        "name": "贷记卡逾期账户数",
+        "en_name": "Credit Card Overdue Accounts",
+        "category": "偿债能力",
+        "introduction": "持有借记卡逾期的账户总数",
+        "icon": "Document",
+        "up": 2,
+        "down": 0,
+        "unit": "笔"
+    },
+    {
+        "name": "贷记卡最大连续逾期月数",
+        "en_name": "Max Consecutive Overdue Months for Credit Card",
+        "category": "偿债能力",
+        "introduction": "持有借记卡逾期的最长连续月数",
+        "icon": "Frigid",
+        "up": 6,
+        "down": 0,
+        "unit": "月"
+    },
+    {
+        "name": "非循环贷逾期账户数",
+        "en_name": "Non-rotating Loan Overdue Accounts",
+        "category": "偿债能力",
+        "introduction": "持有的单笔贷款逾期总数",
+        "icon": "Ringer",
+        "up": 3,
+        "down": 0,
+        "unit": "笔"
+    },
+    {
+        "name": "非循环贷逾期最大数额",
+        "en_name": "Max Overdue Amount of Non-rotating Loan",
+        "category": "偿债能力",
+        "introduction": "持有的单笔贷款的最大逾期额度",
+        "icon": "Update",
+        "up": 15000,
+        "down": 0,
+        "unit": "美元"
+    },
+    {
+        "name": "正在借款的金融机构数",
+        "en_name": "Number of Current Lending Institutions",
+        "category": "偿债能力",
+        "introduction": "正持有的贷款涉及的金融机构总数",
+        "icon": "Tiles",
+        "up": 5,
+        "down": 0,
+        "unit": "家"
+    },
+    {
+        "name": "正在借款的总金额",
+        "en_name": "Total Current Borrowed Amount",
+        "category": "偿债能力",
+        "introduction": "正持有的贷款涉及的金额总数",
+        "icon": "Calories",
+        "up": 300000,
+        "down": 1000,
+        "unit": "美元"
+    }
+]

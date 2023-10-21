@@ -7,11 +7,11 @@ from qfluentwidgets import (ScrollArea, isDarkTheme, FluentIcon, AvatarWidget, B
                             HyperlinkButton, setFont, TitleLabel)
 from ..common.config import cfg, HELP_URL, REPO_URL, EXAMPLE_URL, FEEDBACK_URL
 from ..common.icon import Icon, FluentIconBase
-from ..components.cards import SampleCardView, ProfileCard, LinkCardView
+from ..components.profile_cardview import SampleCardView, ProfileCard, LinkCardView
 from ..common.style_sheet import StyleSheet
 from ..common import resource
-from ..common.signal_bus import signalBus
-from ..common.user_manager import User
+from ..backend.signal_bus import signalBus
+from ..backend.user_manager import User
 
 
 class BannerWidget(QWidget):
@@ -38,28 +38,26 @@ class BannerWidget(QWidget):
         self.linkCardView.addCard(
             # ':/gallery/images/logo.png',
             ':/my_app/images/zk.png', 
-            self.tr('密码学新技术'),
-            self.tr('基于杂凑函数的新型零知识范围证明，更小的证明体积，支持任意基底，支持批处理。')
+            '密码学新技术',
+            '基于杂凑函数的新型零知识范围证明，更小的证明体积，支持任意基底，支持批处理。'
         )
 
         self.linkCardView.addCard(
             FluentIcon.CERTIFICATE,
-            self.tr('征信评估新方案'),
-            self.tr(
-                '使用零知识范围证明，最大限度保护您的个人隐私，同时获取关于您的个人征信报告的可信证明。该证明可作为有效电子凭证，发送给金融机构验证。')
+            '征信评估新方案',
+            '使用零知识范围证明，最大限度保护您的个人隐私，同时获取关于您的个人征信报告的可信证明。该证明可作为有效电子凭证，发送给金融机构验证。'
         )
 
         self.linkCardView.addCard(
             FluentIcon.GITHUB,
-            self.tr('高效代码实现'),
-            self.tr(
-                '核心部分 C++ 实现，使用 BLAKE3 算法计算杂凑值，使用 FFT 算法计算多项式估值。前端 QT 实现。')
+            '高效代码实现',
+            '核心部分 C++ 实现，使用 BLAKE3 算法计算杂凑值，使用 FFT 算法计算多项式估值。前端 QT 实现。'
         )
 
         self.linkCardView.addCard(
             FluentIcon.FEEDBACK,
-            self.tr('现在开始'),
-            self.tr('您可以在首页简要浏览个人征信报告，然后获取关于它的零知识证明，详细操作手册见文档。如果有任何问题，请反馈给我们，谢谢。'),
+            '现在开始',
+            '您可以在首页简要浏览个人征信报告，然后获取关于它的零知识证明，详细操作手册见文档。如果有任何问题，请反馈给我们，谢谢。',
             FEEDBACK_URL
         )
 
@@ -132,7 +130,7 @@ class HomeInterface(ScrollArea):
         self.vBoxLayout.addWidget(self.selfInfoView)
 
 
-        basicInputView = SampleCardView("您的朋友们:", self.view)
+        basicInputView = SampleCardView("向他们申请征信评估, 以获得贷款资格:", self.view)
         basicInputView.addProfileCard(':/my_app/images/users/luminous.png', 'YJW', 'yujiawei@buaa.edu.cn')
         basicInputView.addProfileCard(':/my_app/images/users/bill_gates.png', 'Bill Gates', 'Intel giveth, I takenth away')
         basicInputView.addProfileCard(':/my_app/images/users/musk.png', 'Elon Musk', 'You are fired')
@@ -141,36 +139,15 @@ class HomeInterface(ScrollArea):
         basicInputView.addProfileCard(':/my_app/images/users/jeffrey_preston.png', 'Jeffrey Preston', 'jp')
         basicInputView.addProfileCard(':/my_app/images/users/tim_berners_lee.png', 'Tim Berners-Lee', 'tbl')
         basicInputView.addProfileCard(':/my_app/images/users/nvidia.png', 'Linus Torvalds', 'Fuck You! Nvidia!')
-        basicInputView.addSampleCard(
-            icon=":/gallery/images/controls/Button.png",
-            title="Button",
-            content=self.tr(
-                "A control that responds to user input and emit clicked signal."),
-            routeKey="basicInputInterface",
-            index=0
-        )
+        # basicInputView.addSampleCard(
+        #     icon=":/gallery/images/controls/Button.png",
+        #     title="Button",
+        #     content=self.tr(
+        #         "A control that responds to user input and emit clicked signal."),
+        #     routeKey="basicInputInterface",
+        #     index=0
+        # )
         self.vBoxLayout.addWidget(basicInputView)
-
-        basicInputView = SampleCardView(
-            self.tr("金融机构:"), self.view)
-        basicInputView.addProfileCard(':/my_app/images/users/luminous.png', 'YJW', 'yujiawei@buaa.edu.cn')
-        basicInputView.addProfileCard(':/my_app/images/users/bill_gates.png', 'Bill Gates', 'Intel giveth, I takenth away')
-        basicInputView.addProfileCard(':/my_app/images/users/musk.png', 'Elon Musk', 'You are fired')
-        basicInputView.addProfileCard(':/my_app/images/users/guido_van_rossum.png', 'Guido van Rossum', 'Python is the best language')
-        basicInputView.addProfileCard(':/my_app/images/users/richard_stallman.png', 'Richard Stallman', 'I will find you, and GPL you')
-        basicInputView.addProfileCard(':/my_app/images/users/jeffrey_preston.png', 'Jeffrey Preston', 'jp')
-        basicInputView.addProfileCard(':/my_app/images/users/tim_berners_lee.png', 'Tim Berners-Lee', 'tbl')
-        basicInputView.addProfileCard(':/my_app/images/users/nvidia.png', 'Linus Torvalds', 'Fuck You! Nvidia!')
-        basicInputView.addSampleCard(
-            icon=":/gallery/images/controls/Button.png",
-            title="Button",
-            content=self.tr(
-                "A control that responds to user input and emit clicked signal."),
-            routeKey="basicInputInterface",
-            index=0
-        )
-        self.vBoxLayout.addWidget(basicInputView)
-        # add workflow image after that
     
     def _login(self, success, err):
         if success:

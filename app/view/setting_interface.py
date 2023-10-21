@@ -11,7 +11,7 @@ from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtWidgets import QWidget, QLabel, QFileDialog
 
 from ..common.config import cfg, HELP_URL, FEEDBACK_URL, AUTHOR, VERSION, YEAR, isWin11
-from ..common.signal_bus import signalBus
+from ..backend.signal_bus import signalBus
 from ..common.style_sheet import StyleSheet
 
 
