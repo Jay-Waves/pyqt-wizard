@@ -102,7 +102,31 @@ class ToolBar(QWidget):
         # action triggered
         self.progressBar.hide()
         self.proofButton.clicked.connect(self.onProof)
-    
+        self.saveButton.clicked.connect(self.onSave)   
+        self.shareButton.clicked.connect(self.onShare)
+
+    def onShare(self):
+        InfoBar.error(
+            title='出现错误',
+            content="你的具体征信信息并不符合该征信标准要求，生成证明失败",
+            orient=Qt.Orientation.Horizontal,
+            isClosable=True,
+            duration=3000,
+            position=InfoBarPosition.TOP,
+            parent=self
+        )
+
+    def onSave(self):
+        InfoBar.warning(
+            title='请注意',
+            content="部分项范围较窄，有信息泄露风险，已标注。",
+            orient=Qt.Orientation.Horizontal,
+            isClosable=True,
+            duration=3000,
+            position=InfoBarPosition.TOP,
+            parent=self
+        )
+
     def onProof(self):
         self.progressBar.show()
         self.stateTooltip = StateToolTip(

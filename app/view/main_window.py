@@ -12,6 +12,7 @@ from .proof_interface import ProofInterface
 from .log_interface import LogInterface
 # from .layout_interface import LayoutInterface
 from .request_interface import RequestInterface
+from .test_interface import TestInterface
 from .range_interface import RangeInterface
 from .setting_interface import SettingInterface
 from ..common.config import SUPPORT_URL, cfg
@@ -34,6 +35,7 @@ class MainWindow(FluentWindow):
         self.logInterface = LogInterface(self)
         self.settingInterface = SettingInterface(self)
         self.proofInterface = ProofInterface(self)
+        self.testInterface = TestInterface(self)
         self.rangePages = []
 
         self.connectSignalToSlot()
@@ -53,6 +55,7 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.homeInterface, FIF.HOME, '首页')
         self.addSubInterface(self.requestInterface, FIF.PENCIL_INK, '制定放贷标准')
         self.addSubInterface(self.logInterface, FIF.COMMAND_PROMPT, '日志信息')
+        self.addSubInterface(self.testInterface, FIF.PALETTE, '后端测试')
         self.navigationInterface.addSeparator()
 
         scroll_pos = NavigationItemPosition.SCROLL

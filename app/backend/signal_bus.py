@@ -15,4 +15,8 @@ class SignalBus(QObject):
     proof_end = pyqtSignal()
     verify = pyqtSignal(str) # user name, terminal line
 
+    # test signal
+    test = pyqtSignal(str) # terminal line
+    test_refresh = pyqtSignal()
+
 signalBus = SignalBus()
