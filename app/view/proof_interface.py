@@ -1,15 +1,17 @@
 # coding:utf-8
 from PyQt6.QtWidgets import (QWidget, QFrame, QHBoxLayout, QVBoxLayout, 
                             QTreeWidgetItem, QTreeWidgetItemIterator)
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
+
 from qfluentwidgets import (DatePicker, TimePicker, AMTimePicker, 
                             ZhDatePicker, CalendarPicker, ScrollArea, 
                             TreeWidget, InfoBar, InfoBarPosition,
                             FluentIcon, PushButton, TitleLabel, 
-                            CaptionLabel, CardWidget)
+                            CaptionLabel, CardWidget, StateToolTip)
 
 from ..common.style_sheet import StyleSheet
 from ..components.profile_cardview import TableFrame
+from ..backend.zkrp import zkrp
 
 class TreeFrame(QFrame):
 
@@ -24,7 +26,7 @@ class TreeFrame(QFrame):
         self.card = CardWidget(self)
         self.cardLayout = QVBoxLayout(self.card)
         self.hLayout = QHBoxLayout(self)
-        self.vLayout = QVBoxLayout(self.leftFrame)
+        self.vLayout = QVBoxLayout(self.leftFrame)  
 
         self.cardLayout.setContentsMargins(5, 10, 10, 10)
         self.cardLayout.addWidget(self.tree)
@@ -55,14 +57,18 @@ class TreeFrame(QFrame):
 
         item2 = QTreeWidgetItem(['受您评估者的征信报告的证明结果'])
         item21 = QTreeWidgetItem(['Jotaro Kujo'])
-        item21.addChildren([
+        item22 = QTreeWidgetItem(['John Mendoes'])
+        item23 = QTreeWidgetItem(['swt'])
+        '''item21.addChildren([
             QTreeWidgetItem(['空条承太郎']),
             QTreeWidgetItem(['空条蕉太狼']),
             QTreeWidgetItem(['阿强']),
             QTreeWidgetItem(['卖鱼强']),
             QTreeWidgetItem(['那个无敌的男人']),
-        ])
+        ])'''
         item2.addChild(item21)
+        item2.addChild(item22)
+        item2.addChild(item23)
         self.tree.addTopLevelItem(item2)
         self.tree.expandAll()
         self.tree.setHeaderHidden(True)
@@ -88,13 +94,34 @@ class TreeFrame(QFrame):
                         parent=self
                     )
             # set menu bar
-            self.menu.addWidget(PushButton('验证'))
+            self.button1 = PushButton('验证')
+            self.button1.clicked.connect(self.on_proof)
+            self.menu.addWidget(self.button1)
             self.menu.addWidget(PushButton('删除'))
             self.menu.setCustomBackgroundColor("#00ffff", "#2a2a2a")
             # when menu closed, qt will destroy obj, then python holds meaningless ptr
             self.menu.destroyed.connect(lambda: setattr(self, 'menu', None))
             self.menu.show()
 
+    def on_proof(self):
+        self.stateTooltip = StateToolTip(
+            '验证中...', '请在日志界面查看详细输出', self.window())
+        self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+        self.stateTooltip.show()
+        QTimer.singleShot(3000, self._hideTips) # after fixed time, hide the status info flyou
+        zkrp.proving()
+
+    def _hideTips(self):
+        self.stateTooltip.hide()
+        InfoBar.success(
+            title='Success',
+            content="验证成功，该用户通过您的征信评估",
+            orient=Qt.Orientation.Horizontal,
+            isClosable=True,
+            duration=3000,
+            position=InfoBarPosition.TOP,
+            parent=self
+        )
 
 class ProofInterface(QWidget):
     """ Date time interface """

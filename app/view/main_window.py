@@ -73,7 +73,7 @@ class MainWindow(FluentWindow):
 
     def initWindow(self):
         # self.resize(1180, 760)
-        self.setFixedSize(1180, 760)
+        self.setFixedSize(1385, 779)
         self.setMinimumWidth(760)
         self.setWindowIcon(QIcon(FIF.IOT.icon()))
         self.setWindowTitle('基于零知识证明的征信评估平台')
@@ -97,7 +97,7 @@ class MainWindow(FluentWindow):
         email = User.getEmail()
         w = MessageBox(
             '当前用户:',
-            f'name: {name}\nemail: {email}',
+            f'昵称: {name}\n邮箱: {email}',
             self
         )
         w.yesButton.setText('重新登录')
@@ -154,14 +154,14 @@ class LoginMessageBox(MessageBoxBase):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.titleLabel = SubtitleLabel('Exit and Re-LogIn', self)
+        self.titleLabel = SubtitleLabel('用户登录', self)
         self.userNameLineEdit = LineEdit(self)
         self.passwdLineEdit = LineEdit(self)
         self.banner = QPixmap(':/my_app/images/login.png')
 
-        self.userNameLineEdit.setPlaceholderText('User Name')
+        self.userNameLineEdit.setPlaceholderText('用户名')
         self.userNameLineEdit.setClearButtonEnabled(True)
-        self.passwdLineEdit.setPlaceholderText('Password')
+        self.passwdLineEdit.setPlaceholderText('密码')
         self.passwdLineEdit.setClearButtonEnabled(True)
         self.passwdLineEdit.setEchoMode(QLineEdit.EchoMode.PasswordEchoOnEdit)
 
@@ -172,8 +172,8 @@ class LoginMessageBox(MessageBoxBase):
         self.viewLayout.addWidget(self.passwdLineEdit)
 
         # change the text of button
-        self.yesButton.setText('Login')
-        self.cancelButton.setText('Exit')
+        self.yesButton.setText('登录')
+        self.cancelButton.setText('退出')
 
         self.widget.setMinimumWidth(360)
         self.yesButton.setDisabled(True) # for valid check

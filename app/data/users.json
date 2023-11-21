@@ -5,18 +5,18 @@
         "avatar_path": ":/my_app/images/zk.png"
 
     },
-    "yjw": {
+    "user1": {
         "password": "123456",
-        "email": "yujiawei@buaa.edu.cn",
-        "avatar_path": ["app","data","yjw", "yjw.png"],
+        "email": "user1@gmail.com",
+        "avatar_path": ["app","data","user1", "yjw.png"],
         "property": {
 
         }
     },
-    "swt": {
+    "user2": {
         "password": "123456",
-        "email": "swt@buaa.eud.cn",
-        "avatar_path": ["app","data","swt", "swt.png"]
+        "email": "user2@gmail.com",
+        "avatar_path": ["app","data","user2", "swt.png"]
     },
     "wzw": {
         "password": "123456"

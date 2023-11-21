@@ -11,7 +11,7 @@ class Backend(QThread):
         super().__init__()
         # init in this pwd, get the absolute path
         path = os.path.abspath(__file__)
-        self.proof_cmd  = os.path.join(os.path.dirname(path), "test_fri")
+        self.proof_cmd  = os.path.join(os.path.dirname(path), "test_rangeproof_arbitrary")
         self.test_cmd  = os.path.join(os.path.dirname(path), "test_rangeproof_arbitrary")
 
     def proving(self):
@@ -21,7 +21,7 @@ class Backend(QThread):
                 universal_newlines=True) as process:
             for line in process.stdout:
                 signalBus.proof.emit(line)
-                self.write_to_log(line)
+                # self.write_to_log(line)
         signalBus.proof_end.emit()
         
     

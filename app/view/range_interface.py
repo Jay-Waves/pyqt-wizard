@@ -51,14 +51,14 @@ class ToolBar(QWidget):
 
         self.card = CardWidget()
         self.cardLayout = QHBoxLayout(self.card)
-        self.shareButton = PushButton('Share', self.card, FluentIcon.SHARE)
-        self.saveButton = PushButton('Save', self.card, FluentIcon.SAVE)
-        self.proofButton = PushButton('Proof', self.card, FluentIcon.FINGERPRINT)
+        self.shareButton = PushButton('分享', self.card, FluentIcon.SHARE)
+        self.saveButton = PushButton('保存', self.card, FluentIcon.SAVE)
+        self.proofButton = PushButton('证明', self.card, FluentIcon.FINGERPRINT)
         self.separator = SeparatorWidget(self.card)
         self.profileCard = ProfileCard(
             avatarPath=":/my_app/images/users/luminous.png", 
-            name="Source: YJW", 
-            email="yujiawei@buaa.edu.cn", 
+            name="Source: User1", 
+            email="user1@gmail.com", 
             parent=self
         )
         self.stateTooltip = None
@@ -131,7 +131,6 @@ class ToolBar(QWidget):
         self.progressBar.show()
         self.stateTooltip = StateToolTip(
             '证明中...', '请在日志界面查看详细输出', self.window())
-        self.sender().setText('Proofing')
         self.stateTooltip.move(self.stateTooltip.getSuitablePos())
         self.stateTooltip.show()
         QTimer.singleShot(3000, self._hideTips) # after fixed time, hide the status info flyout

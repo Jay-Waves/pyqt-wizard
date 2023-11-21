@@ -131,7 +131,7 @@ class HomeInterface(ScrollArea):
 
 
         basicInputView = SampleCardView("向他们申请征信评估, 以获得贷款资格:", self.view)
-        basicInputView.addProfileCard(':/my_app/images/users/luminous.png', 'YJW', 'yujiawei@buaa.edu.cn')
+        basicInputView.addProfileCard(':/my_app/images/users/luminous.png', 'user1', 'user1@gmail.com')
         basicInputView.addProfileCard(':/my_app/images/users/bill_gates.png', 'Bill Gates', 'Intel giveth, I takenth away')
         basicInputView.addProfileCard(':/my_app/images/users/musk.png', 'Elon Musk', 'You are fired')
         basicInputView.addProfileCard(':/my_app/images/users/guido_van_rossum.png', 'Guido van Rossum', 'Python is the best language')
