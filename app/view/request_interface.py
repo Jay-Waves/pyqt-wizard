@@ -112,13 +112,13 @@ class ToolBar(QWidget):
         self.progressBar.show()
         self.stateTooltip = StateToolTip(
             '证明中...', '请在日志界面查看详细输出', self.window())
-        self.sender().setText('Proofing')
+        # self.sender().setText('Proofing')
         self.stateTooltip.move(self.stateTooltip.getSuitablePos())
         self.stateTooltip.show()
         QTimer.singleShot(3000, self._hideTips) # after fixed time, hide the status info flyout
 
-        if not User.isDefaultUser():
-            zkrp.proving()
+        # if not User.isDefaultUser():
+        zkrp.proving()
     
     def _hideTips(self):
         self.progressBar.hide()

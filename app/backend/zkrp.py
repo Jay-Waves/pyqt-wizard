@@ -18,20 +18,15 @@ class Backend(QThread):
         with subprocess.Popen(self.proof_cmd, 
                 stdout=subprocess.PIPE, 
                 stderr=subprocess.STDOUT, 
-                universal_newlines=True) as process:
-            for line in process.stdout:
-                signalBus.proof.emit(line)
-                # self.write_to_log(line)
-        signalBus.proof_end.emit()
-        
+                universal_newlines=True) as p:
+            output, _ = p.communicate()
+            signalBus.proof.emit(output)
     
     def test(self):
         with subprocess.Popen(self.test_cmd, 
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, 
             universal_newlines=True) as p:
-            for line in p.stdout:
-                signalBus.test.emit(line)
-        pass
+            signalBus.test.emit(p.stdout)
 
     def write_to_log(self, data):
         with open(User.getLogPath(), "a") as log:

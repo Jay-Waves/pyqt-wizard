@@ -73,7 +73,7 @@ class MainWindow(FluentWindow):
 
     def initWindow(self):
         # self.resize(1180, 760)
-        self.setFixedSize(1385, 779)
+        self.setFixedSize(1344, 756) # 1920*1080*0.7
         self.setMinimumWidth(760)
         self.setWindowIcon(QIcon(FIF.IOT.icon()))
         self.setWindowTitle('基于零知识证明的征信评估平台')
