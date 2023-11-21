@@ -9,9 +9,9 @@ This repository contains the frontend application for our Cryptography Competiti
 3. Installation
 4. Usage
 
-## Features
+## Preview
 
-
+![image](https://github.com/Jay-Waves/foo/assets/88886108/5dbd041d-9b73-415f-8129-406d046da0ef)
 
 ## Prerequisites
 
